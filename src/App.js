@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import WeatherBox from './WeatherBox'
+import Class from "./Class"
 
 export default class App extends Component {
   render() {
     return (
       <div className="site">
-        <WeatherBox />
+       
+        <Class />
       </div>
     )
   }
