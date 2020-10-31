@@ -1,15 +1,22 @@
 import React, { Component } from 'react'
 import './App.css';
+import axios from "axios"
 
-
+const api = {
+  key: "cd136a1ec143e3bd9413139ceeb924c4",
+  base: "https://api.openweathermap.org/data/2.5/"
+}
 
 export default class Class extends Component {
-    constructor(props){
-        super(props);
-        
+  constructor(props){
+    super(props);
+    this.state = {query: "", weather: []}
+    this.handleChange = this.handleChange.bind(this)
+        this.search = this.search.bind(this)
         this.dateBuilder = this.dateBuilder.bind(this)
-        this.handleChange = this.handleChange.bind(this)
+        console.log(this.state.weather)
     }
+   
 
    
 
@@ -25,39 +32,78 @@ export default class Class extends Component {
         return `${day} ${date} ${month} ${year}`
       }
 
+     
+        search = e => {
+          
+          if (e.key === "Enter") {
+          axios({
+            url: `${api.base}weather?q=${this.state.query}&units=metric&APPID=${api.key}`
+          })
+          .then(response => {
+            let data = response.data
+            this.setState({
+              weather: [...this.state.weather, data]
+            })
+          })
+          console.log(this.state.weather.name)
+        }
+        }
+      
       handleChange(e){
-          this.setState({query: e.target.value})
-      }
+        this.setState({query: e.target.value})
+    }
 
+    componentDidUpdate(){
+      localStorage.setItem("dataWeather", JSON.stringify(this.state.weather))
+      
+  }
+
+  componentWillMount(){
+    const dataWeather = JSON.parse(localStorage.getItem("dataWeather"))
+    if(dataWeather !== null){
+        this.setState({weather: dataWeather})
+    }
+}
 
     render() {
+       
+        // console.log(this.props.weather.name)
         return (
-            <div className={(typeof this.props.weather.main != "undefined") ? ((this.props.weather.main.temp > 16) ? "App warm"
-    : "App cold") : "App cold"}>
-      
-      <main>
-        
-        {(typeof this.props.weather.main != "undefined") ? (
-          <div>
+          <>
+          <div className="main">
+            <div className="site">
+            <div className="search-box">
+            <input
+                type="text"
+                className="search-bar"
+                placeholder="Search..."
+                onChange={this.handleChange}
+                value={this.state.query}
+                onKeyPress={this.search}></input>
+            </div>
+           <div className="app-container">
+            {this.state.weather.map(el => {
+              return (
+              <div className={(el.main.temp > 16 ? "warm App" : "cold App")}>
+                <div>
             <div className="location-box">
-              <div className="location">{this.props.weather.name}, {this.props.weather.sys.country}</div>
+              <div className="location">{el.name}, {el.sys.country}</div>
               <div className="date">{this.dateBuilder(new Date())}</div>
             </div>
             <div className="weather-box">
               <div className="temp">
-                {Math.round(this.props.weather.main.temp)}°c
+                {Math.round(el.main.temp)}°c
               </div>
-              <div className="weather">
-                {this.props.weather.weather[0].main}
-              </div>
+              
               
             </div>
         </div>
-        ) : ("")}
-        
-      </main>
-      
-    </div>
-        )
-    }
-}
+              </div>
+              )
+            })}
+             </div>
+            </div>
+            </div>
+            </>
+
+        )}}

@@ -15,17 +15,18 @@ export default class App extends Component {
 
   }
 
-  search = evt => {
-    if (evt.key === "Enter") {
-      fetch(`${api.base}weather?q=${this.state.query}&units=metric&APPID=${api.key}`)
-      .then(res => res.json())
-      .then(result => {
-        this.setState({query: "", weather: result})
+  // search = evt => {
+  //   if (evt.key === "Enter") {
+  //     fetch(`${api.base}weather?q=${this.state.query}&units=metric&APPID=${api.key}`)
+  //     .then(res => res.json())
+  //     .then(result => {
         
-        console.log(result)
-      })
-    }
-  }
+  //       this.setState({query: "", weather: [...this.state.weather, result]})
+        
+  //       console.log(this.state.weather[0].main.temp)
+  //     })
+  //   }
+  // }
 
   handleChange(e){
     this.setState({query: e.target.value})
@@ -33,18 +34,10 @@ export default class App extends Component {
 
   render() {
     return (
-      <div className="site">
-        <div className="search-box">
-         <input
-            type="text"
-            className="search-bar"
-            placeholder="Search..."
-            onChange={this.handleChange}
-            value={this.state.query}
-            onKeyPress={this.search}></input>
-        </div>
+      <div>
+        
         <Class 
-          weather={this.state.weather}
+          weather={[this.state.weather]}
         />
       </div> 
     )
