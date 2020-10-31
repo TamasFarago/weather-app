@@ -32,6 +32,14 @@ main {
   padding: 25px;
 } 
 
+.weather-type {
+  margin-top: 50px;
+  font-weight: 700;
+  color: rgba(243, 237, 237, .8);
+  font-size: 20px;
+  text-transform: uppercase;
+}
+
 .site {
   background-image: url("./assets/background.jpg");
   background-position: bottom;

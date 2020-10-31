@@ -41,16 +41,22 @@ export default class Class extends Component {
           })
           .then(response => {
             let data = response.data
+            console.log(response.data.weather[0].main)
+           
             this.setState({
               weather: [...this.state.weather, data]
             })
+          
           })
-          console.log(this.state.weather.name)
+          console.log(this.state.weather)
         }
         }
       
       handleChange(e){
         this.setState({query: e.target.value})
+        if(this.state.query === this.state.weather.name) {
+          alert("hi")
+        }
     }
 
     componentDidUpdate(){
@@ -84,7 +90,7 @@ export default class Class extends Component {
            <div className="app-container">
             {this.state.weather.map(el => {
               return (
-              <div className={(el.main.temp > 16 ? "warm App" : "cold App")}>
+              <div className={el.main.temp > 16 ? "warm App" : "cold App"}>
                 <div>
             <div className="location-box">
               <div className="location">{el.name}, {el.sys.country}</div>
@@ -95,8 +101,9 @@ export default class Class extends Component {
                 {Math.round(el.main.temp)}°c
               </div>
               
-              
+             
             </div>
+                <div className="weather-type">{el.weather[0].main}</div>
         </div>
               </div>
               )
