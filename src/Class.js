@@ -14,12 +14,9 @@ export default class Class extends Component {
     this.handleChange = this.handleChange.bind(this)
         this.search = this.search.bind(this)
         this.dateBuilder = this.dateBuilder.bind(this)
-        console.log(this.state.weather)
+        
+       
     }
-   
-
-   
-
       dateBuilder = (d) => {
         let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
         let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -36,27 +33,29 @@ export default class Class extends Component {
         search = e => {
           
           if (e.key === "Enter") {
+            this.seenWeather = new Set(this.state.weather.map(w => w.name))
+            console.log(this.seenWeather)
           axios({
             url: `${api.base}weather?q=${this.state.query}&units=metric&APPID=${api.key}`
           })
           .then(response => {
             let data = response.data
-            console.log(response.data.weather[0].main)
-           
-            this.setState({
-              weather: [...this.state.weather, data]
-            })
+            if(!this.seenWeather.has(data.name)) {
+              this.setState({
+                weather: [...this.state.weather, data]
+              })
+            } else {
+              alert("You've already added this location")
+            }
           
           })
           console.log(this.state.weather)
         }
+        
         }
       
       handleChange(e){
         this.setState({query: e.target.value})
-        if(this.state.query === this.state.weather.name) {
-          alert("hi")
-        }
     }
 
     componentDidUpdate(){
@@ -69,7 +68,9 @@ export default class Class extends Component {
     if(dataWeather !== null){
         this.setState({weather: dataWeather})
     }
+   
 }
+
 
     render() {
        
@@ -88,8 +89,11 @@ export default class Class extends Component {
                 onKeyPress={this.search}></input>
             </div>
            <div className="app-container">
+             
             {this.state.weather.map(el => {
-              return (
+              
+              return ( 
+                
               <div className={el.main.temp > 16 ? "warm App" : "cold App"}>
                 <div>
             <div className="location-box">
